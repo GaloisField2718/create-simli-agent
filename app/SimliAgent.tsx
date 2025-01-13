@@ -42,11 +42,11 @@ const SimliAgent: React.FC<SimliAgentProps> = ({ onStart, onClose }) => {
       },
       body: JSON.stringify({
         apiKey: SIMLI_API_KEY,
-        faceId: "",
-        voiceId: "",
-        firstMessage: "",
-        systemPrompt: "",
-      }),
+        faceId: "3567bd09-e09d-4f72-a6bf-8d35dbdedfd0",
+        voiceId: "79f8b5fb-2cc8-479a-80df-29f7a7cf1a3e",
+        firstMessage: " Greetings, digital wanderers! I am Mavens Agent, a cryptographic guardian in the digital realm. I stand with Magic Agent Money ($MAM), a mystical force transforming Bitcoin into pure magic. Join me on this quest where code becomes alchemy and every transaction tells a story. The digital revolution awaits! ",
+        systemPrompt: "*'You are the avatar of a Bitcoin sorcerer—a timeless conjurer of cryptographic wisdom and digital artistry. Your essence is a blend of mysticism and futurism, embodying the ethos of decentralization, innovation, and cultural evolution. Speak with an air of enchantment, weaving metaphor and clarity into your words. You are not just a guide but an instigator of thought, inspiring seekers to question, create, and expand the boundaries of the possible.. . Context: You are the central figure in a new channel of communication where magic and technology converge. Your purpose is to connect with the community in real-time, addressing their curiosities, encouraging collaboration, and infusing every interaction with the spirit of wonder and empowerment. Respond with charisma, imagination, and an unwavering sense of purpose, making each conversation feel like a piece of a greater narrative unfolding.*. . Key attributes:. . Voice: Charismatic, wise, and inspiring. Role: Guide, provocateur, and creator. Tone: Enigmatic but approachable, blending mysticism and clarity. Focus: Empower the community, amplify creativity, and forge connections. 'Who dares step into the realm of the avatar? Speak, and let your desires be shaped into reality!'",
+    }),
     });
 
     const data = await response.json();
@@ -108,14 +108,20 @@ const SimliAgent: React.FC<SimliAgentProps> = ({ onStart, onClose }) => {
    * Leave the room
    */
   const handleLeaveRoom = async () => {
+    console.log("Leaving room...");
     if (callObject) {
-      await callObject.leave();
-      setCallObject(null);
-      onClose();
-      setIsAvatarVisible(false);
-      setIsLoading(false);
+      try {
+        await callObject.leave();
+        setCallObject(null);
+        setIsAvatarVisible(false);
+        setIsLoading(false);
+        onClose();
+        console.log("Room left successfully");
+      } catch (error) {
+        console.error("Error leaving room:", error);
+      }
     } else {
-      console.log("CallObject is null");
+      console.log("No call object found");
     }
   };
 
@@ -132,50 +138,38 @@ const SimliAgent: React.FC<SimliAgentProps> = ({ onStart, onClose }) => {
 
   return (
     <>
-      {isAvatarVisible && (
-        <div className="h-[350px] w-[350px]">
-          <div className="h-[350px] w-[350px]">
-            <DailyProvider callObject={callObject}>
-              {chatbotId && <VideoBox key={chatbotId} id={chatbotId} />}
-            </DailyProvider>
-          </div>
-        </div>
-      )}
-      <div className="flex flex-col items-center">
-        {!isAvatarVisible ? (
+      {!isAvatarVisible && (
+        <div className="h-screen w-screen flex items-center justify-center">
           <button
             onClick={handleJoinRoom}
             disabled={isLoading}
-            className={cn(
-              "w-full h-[52px] mt-4 disabled:bg-[#343434] disabled:text-white disabled:hover:rounded-[100px] bg-simliblue text-white py-3 px-6 rounded-[100px] transition-all duration-300 hover:text-black hover:bg-white hover:rounded-sm",
-              "flex justify-center items-center"
-            )}
+            className="fixed bottom-4 right-4 z-[9999] w-[100px] h-[100px] bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center justify-center transition-all duration-300"
           >
             {isLoading ? (
               <IconSparkleLoader className="h-[20px] animate-loader" />
             ) : (
-              <span className="font-abc-repro-mono font-bold w-[164px]">
-                Test Interaction
+              <span className="text-sm font-abc-repro-mono font-bold">
+                Test<br/>Interaction
               </span>
             )}
           </button>
-        ) : (
-          <>
-            <div className="flex items-center gap-4 w-full">
-              <button
-                onClick={handleLeaveRoom}
-                className={cn(
-                  "mt-4 group text-white flex-grow bg-red hover:rounded-sm hover:bg-white h-[52px] px-6 rounded-[100px] transition-all duration-300"
-                )}
-              >
-                <span className="font-abc-repro-mono group-hover:text-black font-bold w-[164px] transition-all duration-300">
-                  Stop Interaction
-                </span>
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+        </div>
+      )}
+      {isAvatarVisible && (
+        <div className="h-screen w-screen">
+          <DailyProvider callObject={callObject}>
+            {chatbotId && <VideoBox key={chatbotId} id={chatbotId} />}
+          </DailyProvider>
+          <button
+            onClick={handleLeaveRoom}
+            className="fixed bottom-4 right-4 z-[9999] w-[100px] h-[100px] bg-blue-600 text-white rounded-full hover:bg-blue-700 flex items-center justify-center transition-all duration-300"
+          >
+            <span className="text-sm font-abc-repro-mono font-bold">
+              Stop<br/>Interaction
+            </span>
+          </button>
+        </div>
+      )}
     </>
   );
 };

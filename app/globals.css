@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body, #root, main {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.h-full, .w-full {
+  height: 100vh !important;
+  width: 100vw !important;
+}
+
+video, audio {
+  width: 100vw !important;
+  height: 100vh !important;
+  object-fit: cover !important;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -30,4 +49,31 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Force le positionnement des boutons */
+.floating-buttons {
+  position: fixed !important;
+  bottom: 2vh !important;
+  left: 2vw !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 1vh !important;
+}
+
+.custom-floating-button {
+  width: min(100px, 15vw) !important;
+  height: min(100px, 15vw) !important;
+  min-width: 50px !important;
+  min-height: 50px !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+  border-radius: 50% !important;
+  background: blue !important;
+  color: white !important;
+  position: fixed !important;
+  bottom: 2vh !important;
+  right: 2vw !important;
+  z-index: 9999 !important;
 }
